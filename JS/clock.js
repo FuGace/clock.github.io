@@ -1,32 +1,36 @@
-let clock = document.getElementById('clock');
-let color = document.getElementById('color');
-let colorString;
+let clock = document.getElementById('clock'),
+    color = document.getElementById('color'),
+    dateDay = document.getElementById('day'),
+    colorString;
 
 function changeTime (element) {
 
-    let time = new Date();
-    let h = (time.getHours() % 12).toString();
-    let m = time.getMinutes().toString();
-    let s = time.getSeconds().toString();
+    let timeDate = new Date(),
+    h = timeDate.getHours(),
+    min = timeDate.getMinutes(),
+    s = timeDate.getSeconds(),
+    mon = timeDate.getMonth(),
+    day = timeDate.getDate(),
+    year = timeDate.getFullYear();
 
-    if (h.length < 2) {
-        h = '0' + h;  
-    }
+    if (h <= 9) h = '0' + h;
+    if (min <= 9) min = '0' + min;  
+    if (s <= 9) s = '0' + s;
+    if (day <= 9) day = '0' + day;
 
-    if(m.length < 2) {
-        m = '0' + m;  
-    }
+    month = new Array ("января", "февраля", "марта", "апреля", "мая", "июня",
+                    "июля", "августа", "сентября", "октября", "ноября", "декабря");
+    days = new Array ("Воскресенье", "Понедельник", "Вторник", "Среда",
+                    "Четверг", "Пятница", "Суббота");
 
-    if(s.length < 2) {
-        s = '0' + s;  
-    }
-
-    let clockString = h + ':' + m + ':' + s;
-    colorString = '#' + h  + m  + s;
+    clockString = h + ':' + min + ':' + s;
+    date_date = day + " " + month[mon] + " " + year + " г. (" + days[timeDate.getDay()] + ")";
+    colorString = '#' + h  + min  + s;
     
     clock.textContent = clockString;
-    color.textContent = colorString;    
-
+    color.textContent = colorString;
+    dateDay.textContent = date_date;    
+    
     document.body.style.backgroundColor = colorString;
 
     displayCanvas();
@@ -36,13 +40,13 @@ changeTime();
 setInterval(changeTime, 1000);
 
 function displayCanvas(){
-    var canvasHTML = document.getElementById('myCanvas');
-    var contextHTML = canvasHTML.getContext('2d');   
+    let canvasHTML = document.getElementById('myCanvas');
+    let contextHTML = canvasHTML.getContext('2d');   
 	
     //Расчет координат центра и радиуса часов
-    var radiusClock = canvasHTML.width/2;
-    var xCenterClock = canvasHTML.width/2;
-    var yCenterClock = canvasHTML.height/2;
+    let radiusClock = canvasHTML.width/2;
+    let xCenterClock = canvasHTML.width/2;
+    let yCenterClock = canvasHTML.height/2;
 	
     //Очистка экрана. 
     contextHTML.fillStyle = colorString;
@@ -58,24 +62,24 @@ function displayCanvas(){
     contextHTML.closePath();
 	
     //Рисуем рисочки часов
-    var radiusNum = radiusClock - 10; //Радиус расположения рисочек	
-    var radiusPoint;
-    for(var tm = 0; tm < 60; tm++){
+    let radiusNum = radiusClock - 10; //Радиус расположения рисочек	
+    let radiusPoint;
+    for(let tm = 0; tm < 60; tm++){
 	  contextHTML.beginPath();
 	  if(tm % 5 == 0){radiusPoint = 5;}else{radiusPoint = 2;} //для выделения часовых рисочек
-	  var xPointM = xCenterClock + radiusNum * Math.cos(-6*tm*(Math.PI/180) + Math.PI/2);
-	  var yPointM = yCenterClock - radiusNum * Math.sin(-6*tm*(Math.PI/180) + Math.PI/2);
+	  let xPointM = xCenterClock + radiusNum * Math.cos(-6*tm*(Math.PI/180) + Math.PI/2);
+	  let yPointM = yCenterClock - radiusNum * Math.sin(-6*tm*(Math.PI/180) + Math.PI/2);
 	  contextHTML.arc(xPointM, yPointM, radiusPoint, 0, 2*Math.PI, true);
 	  contextHTML.stroke();
 	  contextHTML.closePath();
     } 
 	
     //Оцифровка циферблата часов
-    for(var th = 1; th <= 12; th++){
+    for(let th = 1; th <= 12; th++){
 	contextHTML.beginPath();
 	contextHTML.font = 'bold 25px sans-serif';
-	var xText = xCenterClock + (radiusNum - 30) * Math.cos(-30*th*(Math.PI/180) + Math.PI/2);
-	var yText = yCenterClock - (radiusNum - 30) * Math.sin(-30*th*(Math.PI/180) + Math.PI/2);
+	let xText = xCenterClock + (radiusNum - 30) * Math.cos(-30*th*(Math.PI/180) + Math.PI/2);
+	let yText = yCenterClock - (radiusNum - 30) * Math.sin(-30*th*(Math.PI/180) + Math.PI/2);
 	if(th <= 9){
 		contextHTML.strokeText(th, xText - 5 , yText + 10);
 	}else{
@@ -87,13 +91,13 @@ function displayCanvas(){
 
 	
     //Рисуем стрелки
-    var lengthSeconds = radiusNum - 10;
-    var lengthMinutes = radiusNum - 15;
-    var lengthHour = lengthMinutes / 1.5;
-    var d = new Date();                //Получаем экземпляр даты
-    var t_sec = 6*d.getSeconds();                           //Определяем угол для секунд
-    var t_min = 6*(d.getMinutes() + (1/60)*d.getSeconds()); //Определяем угол для минут
-    var t_hour = 30*(d.getHours() + (1/60)*d.getMinutes()); //Определяем угол для часов
+    let lengthSeconds = radiusNum - 10;
+    let lengthMinutes = radiusNum - 15;
+    let lengthHour = lengthMinutes / 1.5;
+    let d = new Date();                //Получаем экземпляр даты
+    let t_sec = 6*d.getSeconds();                           //Определяем угол для секунд
+    let t_min = 6*(d.getMinutes() + (1/60)*d.getSeconds()); //Определяем угол для минут
+    let t_hour = 30*(d.getHours() + (1/60)*d.getMinutes()); //Определяем угол для часов
 	
     //Рисуем секунды
     contextHTML.beginPath();
